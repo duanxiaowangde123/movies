@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.duan.mapper.StudentMapper">
+	
+	<resultMap type="com.duan.pojo.Student" id="studentResultMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<collection property="courses" javaType="ArrayList" ofType="Course">
+			<id column="cid" property="id"/>
+			<result column="cname" property="name"/>
+		</collection>
+	</resultMap>
+	
+	<select id="selectStudentWithCoursesById" parameterType="int" resultMap="studentResultMap">
+		<![CDATA[
+		select a.id,a.name,b.id cid,b.name cname
+		from t_student a, t_course b,t_curricula c
+		where a.id =c.studentid
+		and b.id=c.courseid
+		and a.id =#{id};
+			]]>
+	</select>
+	
+	<select id="selectStudentByIdOrByNameAndPwd" parameterType="student" resultMap="studentResultMap">
+		select * from t_student
+		where 1 = 1
+		<choose>
+			<when test="id!=null and id > 0">
+				and id=#{id}
+			</when>
+			<when test="name!=null and pwd!=null">
+				and name=#{name} and pwd=#{pwd}
+			</when>
+			<otherwise>
+				
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectStudentByWhere" parameterType="student" resultMap="studentResultMap">
+		select * from t_student
+		<where>
+			<if test="id>0">
+				and id=#{id}
+			</if>
+			<if test="name!=null">
+				and name=#{name}
+			</if>
+		</where>
+	</select>
+	
+	<update id="updateStudentByDynamicSQL" parameterType="student">
+		update t_student
+		<set>
+			<if test="name!=null">
+				name=#{name},
+			</if>
+			<!-- <if test="gender!=null">
+				gender=#{gender},
+			</if> -->
+		</set>
+		where id=#{id}
+	</update>
+	
+	<select id="selectStudentsByInClause" parameterType="list" resultMap="studentResultMap">
+		select * from t_student
+		where id in
+		<foreach collection="list" open="(" close=")" separator="," item="hehe">
+			#{hehe}
+		</foreach>
+	</select>
+	
+	<select id="selectStudentsByPattern" parameterType="string" resultMap="studentResultMap">
+		<bind name="pattern" value="'%'+_parameter+'%'"/><!-- _parameter固定写法.getXXX()作为参数传入的对象中一定要有这个方法 -->
+		select * from t_student where name like #{pattern}
+	</select>
+</mapper>

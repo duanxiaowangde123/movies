@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.duan.mapper.TypeMapper">
+	 <resultMap type="com.duan.pojo.Type" id="typeResultMap">
+		<id column="tid" property="id"/>
+		<result column="tname" property="name"/>
+		<collection property="movies" javaType="ArrayList" ofType="Movie">
+			<id column="id" property="movieId"/>
+			<result column="name" property="movieName"/>
+			<result column="director" property="movieDirector"/>
+			<result column="chifeactor" property="movieChifeActor"/>
+			<result column="date" property="movieDate"/>
+		</collection>
+	</resultMap>
+	<select id="selectTypeWithMoviesById" parameterType="int" resultMap="typeResultMap">
+		SELECT t.id tid,t.name tname,m.* FROM t_type t,t_movie m
+		WHERE t.id = m.typeid
+		AND t.id=#{id};
+	</select>
+</mapper>

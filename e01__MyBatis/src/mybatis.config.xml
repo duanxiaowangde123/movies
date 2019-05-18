@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC 
+"-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<!-- propeties文件 -->
+	<properties resource="db.properties">
+		<property name="mybatis.connection.username" value="movieuser"/>
+		<property name="mybatis.connection.password" value="movieuser"/>
+	</properties>
+	<!-- 系统设置 -->
+	<settings >
+		<setting name="logImpl" value="LOG4J"/>	
+		<!-- <setting name="userGeneratedKeys" value="true"/> -->
+		<!-- 延迟加载 -->
+		<setting name="lazyLoadingEnabled" value="false"/>
+	</settings>
+	<!-- 设置别名 -->
+	<typeAliases>
+		<typeAlias type="com.duan.pojo.Teacher" alias="teacher"/>
+		<package name="com.duan.pojo"/>
+	</typeAliases>
+	<!-- 环境:数据库的链接  -->
+	<environments default="mysql">
+		<environment id="mysql">
+			<!-- 如果使用spring，这个就不用配置了 -->
+			<transactionManager type="JDBC"></transactionManager>
+			<!-- 数据库连接信息,UNPOOLED,POOLED(使用內建的连接池), -->
+			<dataSource type="POOLED">
+				<!-- <property name="driver" value="com.mysql.jdbc.Driver"/>
+				<property name="url" value="jdbc:mysql://localhost:3306/moviedb"/>
+				<property name="username" value="movieuser"/>
+				<property name="password" value="movieuser"/> -->
+				<property name="driver" value="${mybatis.connection.jdbc_driver}"/>
+				<property name="url" value="${mybatis.connection.jdbc_url}"/>
+				<property name="username" value="${mybatis.connection.username}"/>
+				<property name="password" value="${mybatis.connection.password}"/>
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="com/duan/mapper/TeacherMapper.xml"/>
+		<mapper resource="com/duan/mapper/MovieMapper.xml"/>
+		<mapper resource="com/duan/mapper/TypeMapper.xml"/>
+		<mapper resource="com/duan/mapper/StudentMapper.xml"/>
+		<mapper resource="com/duan/mapper/CourseMapper.xml"/>
+		
+		<!-- <package  name="com.duan.mapper"/> -->
+	</mappers>
+</configuration>

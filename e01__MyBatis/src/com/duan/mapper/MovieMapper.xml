@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.duan.mapper.MovieMapper">
+	<resultMap type="com.duan.pojo.Movie" id="movieResultMap">
+		<id property="movieId" column="id"/>
+		<result property="movieName" column="name"/>
+		<result property="movieDirector" column="director"/>
+		<result property="movieChifeActor" column="chifeActor"/>
+		<result property="movieDate" column="date"/>
+		<!-- 关联映射，多对一 -->
+		<association property="movieType" javaType="type">
+			<id property="id" column="typeid"/>
+			<result property="name" column="tname"/>
+		</association>
+	</resultMap>
+	<select id="selectMovieWithTypeById" parameterType="int" resultMap="movieResultMap">
+		<![CDATA[
+			SELECT m.*,t.name as tname 
+			from t_movie m,t_type t where
+			 m.typeid=t.id and m.id=#{id}; 
+		]]>
+	 </select>
+</mapper>

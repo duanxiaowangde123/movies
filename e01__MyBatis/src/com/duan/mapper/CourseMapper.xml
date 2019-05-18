@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.duan.mapper.CourseMapper">
+	<resultMap type="com.duan.pojo.Course" id="courseResultMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<collection property="students" javaType="ArrayList" ofType="Student">
+			<id column="sid" property="id"/>
+			<result column="sname" property="name"/>
+		</collection>
+	</resultMap>
+	
+	<select id="selectCourseWithStudentById" parameterType="int" resultMap="courseResultMap">
+		<![CDATA[
+			select a.id,a.name,b.id sid, b.name sname
+			from  t_course a,t_student b,t_curricula c
+			where a.id=c.courseid
+			and b.id=c.studentid
+			and a.id=#{id};
+				]]>
+	</select>
+</mapper>
